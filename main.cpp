@@ -4,6 +4,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+void drawCube();
 void drawTriangle();
 
 int main()
@@ -50,10 +51,20 @@ int main()
             switch( event.type)
             {
                 case SDL_QUIT : quit=true; break;
+                case SDL_KEYDOWN :
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_ESCAPE: quit=true; break;
+                        case SDLK_w : glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); break;
+                        case SDLK_f : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    }
+                break;
+
             }
         }
-        glClear(GL_COLOR_BUFFER_BIT);
-        drawTriangle();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //drawTriangle();
+        drawCube();
         SDL_GL_SwapWindow(window);
     } //end quit loop
 }
@@ -71,6 +82,47 @@ void drawTriangle()
             glVertex3f(1.0,-1.0,0.0f);
             glColor3f(1.0f, 1.0f,1.0f);
             glVertex3f(-1.0f, -1.0f,0.0f);
+        glEnd();
+    glPopMatrix();
+}
+
+
+void drawCube()
+{
+    static int rot=0; //static is a bit of globabl memory where it retains its value between calls
+
+    glPushMatrix();
+        glRotated(++rot, 0.6,1,0);
+        glBegin(GL_QUADS);
+            glColor3f(1.0, 0.0, 0.3);
+            glVertex3f(-1,-1,1);
+            glVertex3f(-1,1,1);
+            glVertex3f(1,1,1);
+            glVertex3f(1,-1,1);
+
+            glColor3f(1.0, 0.6, 0.3);
+            glVertex3f(-1,-1,-1);
+            glVertex3f(-1,1,-1);
+            glVertex3f(1,1,-1);
+            glVertex3f(1,-1,-1);
+
+            glColor3f(0.6, 0.6, 0.3);
+            glVertex3f(-1,-1,-1);
+            glVertex3f(-1,1,-1);
+            glVertex3f(-1,1,1);
+            glVertex3f(-1,-1,1);
+
+            glColor3f(0.6, 0.9, 0.3);
+            glVertex3f(1,-1,-1);
+            glVertex3f(1,-1,1);
+            glVertex3f(1,1,1);
+            glVertex3f(1,1,-1);
+
+            glColor3f(0.6, 0.3, 0.3);
+            glVertex3f(-1,1,1);
+            glVertex3f(1,1,1);
+            glVertex3f(1,1,-1);
+            glVertex3f(-1,1,-1);
         glEnd();
     glPopMatrix();
 }
